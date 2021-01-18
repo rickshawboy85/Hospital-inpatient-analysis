@@ -1,5 +1,5 @@
 # Hospital-inpatient-analysis
-Linear regression project in which I attempt to predict the length-of-stay of inpatients using only the data available upon their arrival at hospital.
+Machine learning project in which I utitlize liniear regression algorithms in an attempt to predict the length-of-stay of inpatients using only the data available upon their arrival at hospital.
 
 # Contents of the repository:
 main.py: imports necessary libraries and executes all functions for cleaning data, visualising feature relationships, training models and analysing results. To execute it, set the path to the location of the folder containing all the files. 
