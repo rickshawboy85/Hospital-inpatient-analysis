@@ -10,6 +10,6 @@ Scripts: Scripts containing the functions executed in main.py
 
 Plots: plots of relationships between features and target
 
-Df1, df2, df3, df4, df5: contain sections of the data set and should be concatenated before executing the main.py script.
+df1, df2, df3, df4, df5: contain sections of the data set and should be concatenated before executing the main.py script.
 
 Memoria: a Powerpoint-style presentation of the project and my final memoir of the project
