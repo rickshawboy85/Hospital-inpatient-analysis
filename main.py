@@ -7,7 +7,7 @@ Created on Wed Dec 23 11:19:23 2020
 """
 
 import os
-path = '/Users/samthomas/Desktop/NEOLAND/Final_Project'
+path = '/Users/samthomas/Desktop/NEOLAND/Project'
 os.chdir(path + '/Scripts/')
 
 import pandas as pd
@@ -35,7 +35,7 @@ from sklearn.model_selection import GridSearchCV
 ## load data set
 ##=====================================================================================
 
-dt = read_data(path + '/Data/')
+dt = read_data(path)
 df = dt.copy()
 
 
