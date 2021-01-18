@@ -7,16 +7,31 @@ Created on Tue Aug  4 14:38:44 2020
 """
 
 import pandas as pd
+import glob
+
 
 def read_data(path):
     
-    print('Reading file...\n')
+    print('\nReading file...\n')
     
-    hosp_data = pd.read_csv(path + 'Hospital_Inpatient_Discharges.csv')
+    files = glob.glob(path + '/Data/*.csv')
+    
+    read_files = []
+
+    for file in files:
+    
+        small_frame = pd.read_csv(file)
+        read_files.append(small_frame)
+    
+    dataframe = pd.concat(read_files)
+    
+    dataframe = dataframe.drop('Unnamed: 0', axis=1)
     
     print('\nReading file complete.')
     
-    return hosp_data
+    return dataframe
 
 if __name__ == '__main__':
     read_data(path)
+    
+    
