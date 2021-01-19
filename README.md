@@ -8,6 +8,6 @@ Scripts: Scripts containing the functions executed in main.py
 
 Plots: plots of relationships between features and target
 
-df1, df2, df3, df4, df5: contain sections of the data set and will be concatenated automatically in the main.py script. Dimensions: 2346760 rows, 37 columns.
+df1, df2, df3, df4, df5: contain sections of the data set and will be concatenated automatically upon calling the read_data function in the main.py script. Dimensions: 2346760 rows, 37 columns.
 
 Memoria: a Powerpoint-style presentation of the project and my final memoir of the project
