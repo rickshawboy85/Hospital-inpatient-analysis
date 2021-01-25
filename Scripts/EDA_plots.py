@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 
 def plots(X, Y):
     
+    os.chdir('/Users/samthomas/Desktop/NEOLAND/Project/Plots/')
     
     for variable in X:
         
@@ -23,6 +24,9 @@ def plots(X, Y):
         sns.barplot(X[variable], Y)
         plt.xticks(rotation=90)
         plt.ylabel('Mean Length of Stay')
+        
+        plt.savefig(variable)
+        
         plt.show()
         
 
