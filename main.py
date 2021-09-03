@@ -7,120 +7,42 @@ Created on Wed Dec 23 11:19:23 2020
 """
 
 import os
-path = '/Users/samthomas/Desktop/NEOLAND/Project'
+path = '/Users/samthomas/Desktop/LoS'
 os.chdir(path + '/Scripts/')
 
+import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
 import numpy as np
-from math import sqrt
-import seaborn as sns
-import matplotlib.pyplot as plt
-from read_csv import read_data
-from data_prep import prep_dataset
-from train_test import train_test
-from EDA_plots import plots
-import results_analysis as pa
-from LinearRegressor import linear_regressor
-from XGB_regressor import XGB_regressor
-from xgboost import XGBRegressor
-from Light_GBM_regressor import GBM_regressor, GBM_regressor2
-from lightgbm import LGBMRegressor
 from sklearn.model_selection import train_test_split
-from sklearn import linear_model
-from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import mean_squared_error
+from lightgbm import LGBMRegressor
+from math import sqrt
+import glob
+import Functions as fn
+
+## ==================PARAMS========================== 
+
+target = 'Length of Stay'
+ordinals = ['Age Group', 'APR Severity of Illness Description', 'APR Risk of Mortality']
+dummies = ['APR MDC Description', 'Type of Admission', 'Gender', 'CCS Procedure Description', 'APR DRG Description', 'CCS Diagnosis Code', 'Facility Name', 'Emergency Department Indicator']
 
 
-##=====================================================================================
-## load data set
-##=====================================================================================
+## ==================FUNCTIONS========================== 
 
-dt = read_data(path)
-df = dt.copy()
+## load and clean data
+data = fn.LoadData(path)
+fn.plots(path, data, target, ordinals, dummies)
 
+## transformations done in CreateMasterTable
+data2 = fn.CreateMasterTable(data, ordinals, dummies, target, path)
+x, y = fn.CreateXY(data2, target)
 
-##=====================================================================================
-## Clean data set (impute missings etc.)
-##=====================================================================================
+## deploy lgbm regressors (untuned params and tuned params)
+RMSE_tr, RMSE_te, x_test, y_test, y_pred_test = fn.simple_model(x, y, path)
+RMSE_tr_tuned, RMSE_te_tuned, x_test_tuned, y_test_tuned, y_pred_test_tuned = fn.TunedModel(x, y)
 
-datarame = prep_dataset(df)
-
-
-##=====================================================================================
-## Data insppection
-##=====================================================================================
-
-# separate target 
-X = datarame.drop('Length of Stay', axis=1)
-Y = datarame['Length of Stay']
-
-# plot each variable against the target
-plots = plots(X, Y)
-
-
-##=====================================================================================
-## Train the models
-##=====================================================================================
-
-# convert categorical variables to numerical
-X = pd.get_dummies(X, drop_first=True)
-
-
-# train test split
-x_train, x_test, y_train, y_test = train_test(X, Y)
-
-
-# linear regression model
-RMSE_train, RMSE_test, Y_pred_train, Y_pred_test = linear_regressor(x_train, 
-                                                                    x_test, 
-                                                                    y_train, 
-                                                                    y_test)
-
-
-# xgb model
-RMSE_train2, RMSE_test2, Y_pred_train2, Y_pred_test2 = XGB_regressor(x_train, 
-                                                                     x_test, 
-                                                                     y_train, 
-                                                                     y_test)
-
-
-# gbm model1
-RMSE_train3, RMSE_test3, Y_pred_train3, Y_pred_test3 = GBM_regressor(x_train, 
-                                                                     x_test, 
-                                                                     y_train, 
-                                                                     y_test)
-
-
-# gbm model2 (no params)
-RMSE_train4, RMSE_test4, Y_pred_train4, Y_pred_test4 = GBM_regressor2(x_train, 
-                                                                      x_test, 
-                                                                      y_train, 
-                                                                      y_test)
-
-
-##=====================================================================================
-## Analysis of results
-##=====================================================================================
-
-
-data1 = pa.plot_prep(x_train.copy(), y_train.copy(), Y_pred_train.copy())
-pa.RMSE_plot(data1)
-pa.countplot(data1)
-
-
-data2 = pa.plot_prep(x_train.copy(), y_train.copy(), Y_pred_train2.copy())
-pa.RMSE_plot(data2)
-pa.countplot(data2)
-
-
-data3 = pa.plot_prep(x_train.copy(), y_train.copy(), Y_pred_train3.copy())
-pa.RMSE_plot(data3)
-pa.countplot(data3)
-
-
-data4 = pa.plot_prep(x_train.copy(), y_train.copy(), Y_pred_train4.copy())
-pa.RMSE_plot(data4)
-pa.countplot(data4)
-
-pa.pieplot(data4)
+## splits predictions into groups and give rmse per group
+fn.resultsAnalysis(path, x_test, y_test, y_pred_test)
 
