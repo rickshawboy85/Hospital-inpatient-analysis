@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Jul 13 09:43:27 2021
-
-@author: samthomas
-"""
-
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -41,7 +35,7 @@ def LoadData(path):
     dt = dt.loc[dt['Type of Admission'] != 'Not Available', :]
     
     dt.drop_duplicates(keep='first', inplace=True)
-    
+    dt.to_csv(path + '/Outputs/Inpatient_Data_Clean.csv')
     return dt
 
 
@@ -79,7 +73,7 @@ def CreateMasterTable(dt, ordinals, dummies, target, path):
     cols = ordinals + dummies + [target] 
     df = df.loc[:,cols]
     df = pd.get_dummies(df, columns=dummies, drop_first=True)
-    # df.to_excel(path + '/Outputs/MasterTable.xlsx') 
+    df.to_csv(path + '/Outputs/MasterTable.csv') 
     return df
         
 
@@ -206,6 +200,5 @@ if __name__ == '__main__':
     simple_model(x, y, path)
     TunedModel(x, y, path)
     resultsAnalysis(x_test, y_test, y_pred_test)
-
 
 
